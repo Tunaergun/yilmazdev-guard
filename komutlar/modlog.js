@@ -1,31 +1,42 @@
 const Discord = require('discord.js')
 const db = require('quick.db')
-const ayarlar = require('../ayarlar.json')
- 
+
 exports.run = async(client, message, args) => {
-
-let prefix = ayarlar.prefix
   
-let k = message.mentions.channels.first()
-
-  if (!k) {
-    const sa = new Discord.MessageEmbed()
-    .setDescription(`Kanal Belirt `)
-    .setTimestamp()
-    return message.channel.send(sa)
-  }
-    
-    db.set(`modlog_${message.guild.id}`,k.id)
-       const sa = new Discord.MessageEmbed()
-    .setDescription(`Modlog ${k} Olarak Ayarlandı! \n Bazı Olayları Burdan Takip Edebilirsiniz!`)
-    .setTimestamp()
-    return message.channel.send(sa)
-  
+if (!message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(new Discord.MessageEmbed().setColor("RANDOM").setDescription(`Bu Komutu Kullanabilmek İçin "\`Yönetici\`" Yetkisine Sahip Olmalısın.`));
+let logk = message.mentions.channels.first();
+let logkanal = await db.fetch(`salvomodlog_${message.guild.id}`)
+if (args[0] === "sıfırla" || args[0] === "kapat") {
+if(!logkanal) return message.channel.send(new Discord.MessageEmbed()                                          
+  .addField("Hata",`Mod-Log Ayarlı Değil`)
+  .setColor("RED")
+  .setFooter("Yılmaz Dev"));
+db.delete(`salvomodlog_${message.guild.id}`)
+message.channel.send(new Discord.MessageEmbed()
+  .addField("İşlem Başarılı",`Mod-Log Başarılı Bir Şekilde Sıfırlandı`)
+  .setColor("RED")
+  .setFooter("Yılmaz Dev"));
+return
+}
+if (!logk) return message.channel.send(new Discord.MessageEmbed()
+  .addField("Hata",`Mod-Log Kanalı Belirt`)
+  .setColor("RED")
+  .setFooter("Yılmaz Dev"));
+db.set(`salvomodlog_${message.guild.id}`, logk.id)
+message.channel.send(new Discord.MessageEmbed()
+  .addField("İşlem Başarılı",`Mod-Log Kanalı ${logk} Olarak Ayarlandı`)
+  .setColor("RED")
+  .setFooter("Yılmaz Dev"));
 };
 exports.conf = {
-  aliases: [],
-  permLevel: 0
+    enabled: true,
+    guildOnly: false,
+    aliases: ['mod-log','modlog'],
+    permLevel: 0 
 };
+
 exports.help = {
-  name: 'modlog'
-}; 
+    name: 'mod-log',
+    description: 'Moderasyon Loglarınızı Kayıt Eder',
+    usage: 'mod-log'
+};

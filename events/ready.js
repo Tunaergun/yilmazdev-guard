@@ -6,10 +6,6 @@ const ayarlar = require('../ayarlar.json')
 var prefix= ayarlar.prefix;
 
 module.exports = client => {
-  console.log(`${client.guilds.size} Kadar Sunucuya Hizmet Veriyorum!`);
-  client.user.setStatus("idle");
-    client.user.setActivity("Guard Bot  Altyapı", { type: "WATCHING" });
-  
-
-  
+    client.user.setActivity("hakanycg", { type: "WATCHING" });
+    console.log("Bot Çalışmaya Hazır")
 };

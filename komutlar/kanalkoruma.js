@@ -3,35 +3,23 @@ const db = require('quick.db')
 const ayarlar = require('../ayarlar.json')
  
 exports.run = async(client, message, args) => {
-
+if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send('Bu komutu kullanabilmek için `Yönetici` yetkisine sahip olmalısın')
 let prefix = ayarlar.prefix
-  
-  
+
   if (!args[0]) {
-    const sa = new Discord.MessageEmbed()
-    .setDescription(`Bunu mu Arıyorsun? ${prefix}kanal-koruma aç/kapat`)
-    .setTimestamp()
-    return message.channel.send(sa)
+ message.reply(`**Örnek Kullanım:** ${prefix}kanal-koruma aç/kapat`)
   }
   if (args[0] === 'aç') {
-    
     db.set(`kanalk_${message.guild.id}`, "Aktif")
-       const sa = new Discord.MessageEmbed()
-    .setDescription(`Kanal Koruma Başarıyla Açıldı!`)
-    .setTimestamp()
-    return message.channel.send(sa)
+     message.reply(`Kanal Koruma Başarıyla Açıldı!`)
   }
    if (args[0] === 'kapat') {
-    
     db.delete(`kanalk_${message.guild.id}`)
-       const sa = new Discord.MessageEmbed()
-    .setDescription(`Kanal Koruma Başarıyla Kapatıldı!`)
-    .setTimestamp()
-    return message.channel.send(sa)
+    message.reply(`Kanal Koruma Başarıyla Kapatıldı!`)
   }
 };
 exports.conf = {
-  aliases: [],
+  aliases: ['kanalkoruma'],
   permLevel: 0
 };
 exports.help = {
